@@ -140,9 +140,14 @@
 
   <section class="max-w-7xl mx-auto px-6 py-20">
     <div class="grid md:grid-cols-3 gap-6">
-        <article class="card p-6">
-            <h3 class="text-lg font-semibold flex items-center gap-3" data-translate-key="what_is_olm_title"></h3>
-            <p class="mt-2 text-sm text-slate-600" data-translate-key="what_is_olm_p"></p>
+        <article class="card p-6 flex flex-col">
+            <div class="flex-1">
+                <h3 class="text-lg font-semibold flex items-center gap-3" data-translate-key="what_is_olm_title"></h3>
+                <p class="mt-2 text-sm text-slate-600" data-translate-key="what_is_olm_p"></p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-200/60">
+                <button type="button" id="showJsonBtn" class="text-sm font-semibold text-[var(--c-primary)] hover:text-[var(--c-primary-hover)] transition-colors" data-translate-key="what_is_olm_button"></button>
+            </div>
         </article>
         <article class="card p-6">
             <h3 class="text-lg font-semibold flex items-center gap-3" data-translate-key="why_mcp_title"></h3>
@@ -214,6 +219,23 @@
         </div>
     </div>
 
+    <div id="jsonModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="jsonModalTitle">
+        <div class="fixed inset-0 modal-backdrop" data-json-close></div>
+        <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-2xl shadow-2xl max-w-4xl w-full border border-white/20">
+            <div class="p-6">
+                <div class="flex justify-between items-center">
+                    <h2 id="jsonModalTitle" class="text-lg font-semibold text-slate-200" data-translate-key="json_modal_title"></h2>
+                    <button type="button" class="text-slate-400 hover:text-white" data-json-close aria-label="Close">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                <div class="mt-4 bg-slate-800/50 rounded-xl p-4 h-[60vh] overflow-auto font-mono text-xs text-sky-300 border border-slate-700">
+                    <pre><code id="jsonContent"></code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
   <footer class="border-t border-slate-200/80 mt-20">
     <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-slate-500 text-center flex flex-col items-center gap-4">
@@ -256,6 +278,8 @@
             why_mcp_p: "Le <strong>Model Context Protocol (MCP)</strong> est un protocole universel qui permet à votre OLM de communiquer de façon sécurisée et standardisée avec n'importe quelle IA.",
             design_fiction_title: "💡 Une Vision du Futur",
             design_fiction_p: "Cette démo illustre un futur où chaque apprenant possède et contrôle ses données d'apprentissage, ouvrant la voie à une reconnaissance universelle des compétences.",
+            what_is_olm_button: "Voir un exemple",
+            json_modal_title: "Exemple de données brutes OLM",
             modal_title: "Autoriser la connexion",
             modal_subtitle: "Partagez les données de votre OLM et définissez un objectif pour l'analyse.",
             modal_data_title: "Données à partager",
@@ -323,6 +347,8 @@
             why_mcp_p: "The <strong>Model Context Protocol (MCP)</strong> is the universal protocol that allows your OLM to communicate securely and standardly with any AI.",
             design_fiction_title: "💡 A Vision of the Future",
             design_fiction_p: "This demo illustrates a future where every learner owns and controls their learning data, paving the way for universal skill recognition.",
+            what_is_olm_button: "See an example",
+            json_modal_title: "Raw OLM Data Example",
             modal_title: "Authorize Connection",
             modal_subtitle: "Share your OLM data and set an objective for the analysis.",
             modal_data_title: "Data to Share",
@@ -394,9 +420,57 @@
       { id: "cert-meta-1", org: "Llama", emoji: "🧠", title: {fr:"Technicien CVC en environnement connecté", en:"HVAC Technician in Connected Environments"}, color:"fuchsia", rationale: {fr:"Faites le pont entre votre métier et le monde de la domotique et de l'IoT.", en:"Bridge the gap between your profession and the world of home automation and IoT."}, syllabus: { fr: ["Module 1: Introduction à la domotique", "Module 2: Protocoles (Zigbee, Matter)", "Module 3: Sécurité des réseaux domestiques"], en: ["Module 1: Introduction to Domotics", "Module 2: Protocols (Zigbee, Matter)", "Module 3: Home Network Security"] } }
     ];
 
+    const olmExampleJson = {
+      "id": "olm-john-doe-12345",
+      "owner": "John Doe",
+      "version": "1.0.0",
+      "last_updated": "2025-09-30T10:00:00Z",
+      "profile": {
+        "role": "Plombier / Chauffagiste",
+        "status": "En recherche active, ouvert à la formation"
+      },
+      "skills": {
+        "hard_skills": [
+          { "name": "Lecture de plans", "level": 70, "emotion": "Confident" },
+          { "name": "Installation sanitaire", "level": 85, "emotion": "Expert" },
+          { "name": "Soudure cuivre", "level": 65, "emotion": "Needs Improvement" },
+          { "name": "Maintenance chaudières", "level": 78, "emotion": "Confident" },
+          { "name": "Réseaux de chauffage", "level": 60, "emotion": "Anxious" }
+        ],
+        "soft_skills": [
+          { "name": "Relation client", "level": 55, "history": ["Formation 'Communication non-violente'"] },
+          { "name": "Travail d'équipe", "level": 80, "history": ["Projet collaboratif 'Grand Chantier XYZ'"] },
+          { "name": "Résolution de problèmes", "level": 75, "history": ["Intervention d'urgence 'Fuite majeure'"] }
+        ]
+      },
+      "learning_history": {
+        "successes": [
+          { "description": "Réparation complexe d'une chaudière industrielle en un temps record.", "skill_gained": "Maintenance chaudières", "points": 5 },
+          { "description": "Obtention de la certification 'Sécurité Gaz Avancée'.", "skill_gained": "Installation sanitaire", "points": 10 }
+        ],
+        "failures": [
+          { "description": "Difficulté à interpréter un plan de réseau de chauffage isométrique, ayant nécessité l'aide d'un pair.", "learning_opportunity": "Approfondir la lecture de plans 3D" }
+        ]
+      },
+      "professional_experience": [
+        { "company": "Plomberie Durand & Fils", "role": "Apprenti Plombier", "years": "2015-2017" },
+        { "company": "Bati-Services Express", "role": "Plombier Chauffagiste", "years": "2017-2024" }
+      ],
+      "motivations": [
+        "Monter en compétence sur les énergies renouvelables",
+        "Obtenir un poste avec plus de responsabilités",
+        "Améliorer ma communication avec les clients difficiles"
+      ],
+      "peers": [
+        { "name": "Jane Smith", "relation": "Ancienne collègue", "domain": "Plomberie, spécialisée CVC" },
+        { "name": "Marc Petit", "relation": "Mentor", "domain": "Chauffagiste expert" }
+      ]
+    };
+
     let state = { skills: [], provider: null, logs: [], recos: [], consents: { competences:true, chantiers:true, notes:false, disponibilites:false, objectifs:true }, context: CONTEXTS[0].id, pendingProvider: null, initialSkillsSnapshot: [], lastFocused: null, language: 'fr' };
     let modalKeyListener = null;
     let certModalKeyListener = null;
+    let jsonModalKeyListener = null;
     
     const $ = (s) => document.querySelector(s);
     const el = (tag, cls) => { const e=document.createElement(tag); if(cls) e.className=cls; return e; };
@@ -796,6 +870,38 @@
         }
         state.lastFocused?.focus();
     }
+
+    function openJsonModal() {
+        state.lastFocused = document.activeElement;
+        const m = $("#jsonModal");
+        $('#jsonContent').textContent = JSON.stringify(olmExampleJson, null, 2);
+
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+        const focusables = getFocusable(m), first = focusables[0], last = focusables[focusables.length-1];
+        first?.focus();
+
+        jsonModalKeyListener = (e) => {
+            if (e.key === 'Escape') closeJsonModal();
+            if (e.key === 'Tab') {
+                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+        };
+        m.addEventListener('keydown', jsonModalKeyListener);
+        m.querySelectorAll('[data-json-close]').forEach(b => b.onclick = closeJsonModal);
+    }
+
+    function closeJsonModal() {
+        const m = $("#jsonModal");
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+        if (jsonModalKeyListener) {
+            m.removeEventListener('keydown', jsonModalKeyListener);
+            jsonModalKeyListener = null;
+        }
+        state.lastFocused?.focus();
+    }
     
     async function connectTo(name){
       state.provider = name; 
@@ -917,6 +1023,7 @@
         $('#resetBtn').addEventListener('click', reset);
         $('#lang-fr').addEventListener('click', () => updateUI('fr'));
         $('#lang-en').addEventListener('click', () => updateUI('en'));
+        $('#showJsonBtn').addEventListener('click', openJsonModal);
 
         updateUI(state.language);
     });
